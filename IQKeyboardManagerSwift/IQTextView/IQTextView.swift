@@ -74,6 +74,7 @@ open class IQTextView: UITextView {
     private var placeholderExpectedFrame: CGRect {
         let placeholderInsets = self.placeholderInsets
         let maxWidth = self.frame.width-placeholderInsets.left-placeholderInsets.right
+        IQ_PlaceholderLabel.sizeToFit()
         let expectedSize = IQ_PlaceholderLabel.sizeThatFits(CGSize(width: maxWidth, height: self.frame.height-placeholderInsets.top-placeholderInsets.bottom))
         
         return CGRect(x: placeholderInsets.left, y: placeholderInsets.top, width: maxWidth, height: expectedSize.height)
@@ -87,7 +88,7 @@ open class IQTextView: UITextView {
         label.numberOfLines = 0
         label.font = self.font
         label.textAlignment = self.textAlignment
-        label.backgroundColor = UIColor.clear
+        label.backgroundColor = UIColor.red
         #if swift(>=5.1)
         label.textColor = UIColor.systemGray
         #else
@@ -108,6 +109,8 @@ open class IQTextView: UITextView {
         
         set {
             IQ_PlaceholderLabel.textColor = newValue
+            IQ_PlaceholderLabel.sizeToFit()
+            IQ_PlaceholderLabel.layoutIfNeeded()
         }
     }
     
@@ -138,8 +141,10 @@ open class IQTextView: UITextView {
     
     @objc override open func layoutSubviews() {
         super.layoutSubviews()
-        
+        IQ_PlaceholderLabel.sizeToFit()
         IQ_PlaceholderLabel.frame = placeholderExpectedFrame
+        IQ_PlaceholderLabel.sizeToFit()
+        IQ_PlaceholderLabel.layoutIfNeeded()
     }
     
     @objc internal func refreshPlaceholder() {
@@ -149,6 +154,9 @@ open class IQTextView: UITextView {
         } else {
             IQ_PlaceholderLabel.alpha = 1
         }
+        
+        IQ_PlaceholderLabel.sizeToFit()
+        IQ_PlaceholderLabel.layoutIfNeeded()
     }
     
     @objc override open var text: String! {
@@ -174,12 +182,16 @@ open class IQTextView: UITextView {
             } else {
                 IQ_PlaceholderLabel.font = UIFont.systemFont(ofSize: 12)
             }
+            IQ_PlaceholderLabel.sizeToFit()
+            IQ_PlaceholderLabel.layoutIfNeeded()
         }
     }
     
     @objc override open var textAlignment: NSTextAlignment {
         didSet {
             IQ_PlaceholderLabel.textAlignment = textAlignment
+            IQ_PlaceholderLabel.sizeToFit()
+            IQ_PlaceholderLabel.layoutIfNeeded()
         }
     }
     
@@ -192,6 +204,8 @@ open class IQTextView: UITextView {
         
         set {
             super.delegate = newValue
+            IQ_PlaceholderLabel.sizeToFit()
+            IQ_PlaceholderLabel.layoutIfNeeded()
         }
     }
     
@@ -203,7 +217,8 @@ open class IQTextView: UITextView {
         var newSize = super.intrinsicContentSize
         let placeholderInsets = self.placeholderInsets
         newSize.height = placeholderExpectedFrame.height + placeholderInsets.top + placeholderInsets.bottom
-        
+        IQ_PlaceholderLabel.sizeToFit()
+        IQ_PlaceholderLabel.layoutIfNeeded()
         return newSize
     }
 }
